@@ -33,9 +33,6 @@
       max-width: 800px;
       margin: auto;
     }
-    section {
-      margin-bottom: 40px;
-    }
     footer {
       background-color: #1c1c1c;
       color: #ffd700;
@@ -76,52 +73,33 @@
 
   <nav>
     <a href="#">Home</a>
-    <a href="#services">Services</a>
-    <a href="#schedule">Schedule</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
   </nav>
 
   <div class="content">
-    <section id="services">
-      <h2>Our Services</h2>
-      <p>We offer high-quality exterior cleaning at affordable rates:</p>
-      <ul>
-        <li><strong>House Washing:</strong> Starting at $0.20 per square foot</li>
-        <li><strong>Decks & Patios:</strong> Starting at $0.35 per square foot</li>
-        <li><strong>Driveways:</strong> Starting at $0.50 per square foot</li>
-      </ul>
-    </section>
+    <h2>Request an Appointment</h2>
+    <form action="https://formspree.io/f/mzzrjkgp">
+      <label for="service">Select a Service:</label>
+      <select id="service" name="service" required>
+        <option value="">-- Choose a service --</option>
+        <option value="house">House Washing</option>
+        <option value="deck">Deck or Patio Cleaning</option>
+        <option value="driveway">Driveway Cleaning</option>
+      </select>
 
-    <section id="schedule">
-      <h2>Schedule a Service</h2>
-      <form action="https://formspree.io/f/yourformid" method="POST">
-        <label for="service">Select a Service:</label>
-        <select id="service" name="service" required>
-          <option value="">-- Choose a service --</option>
-          <option value="house">House Washing</option>
-          <option value="deck">Deck or Patio Cleaning</option>
-          <option value="driveway">Driveway Cleaning</option>
-        </select>
+      <label for="size">Approximate Square Footage:</label>
+      <input type="number" id="size" name="size" placeholder="e.g., 1500" required />
 
-        <label for="size">Approximate Square Footage:</label>
-        <input type="number" id="size" name="size" placeholder="e.g., 1500" required />
+      <label for="date">Preferred Date:</label>
+      <input type="date" id="date" name="date" required />
 
-        <label for="date">Preferred Date:</label>
-        <input type="date" id="date" name="date" required />
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" required />
 
-        <label for="name">Your Name:</label>
-        <input type="text" id="name" name="name" required />
+      <label for="contact">Contact Info (Phone or Email):</label>
+      <input type="text" id="contact" name="contact" required />
 
-        <label for="contact">Contact Info (Phone or Email):</label>
-        <input type="text" id="contact" name="contact" required />
-
-        <button type="submit">Request Appointment</button>
-      </form>
-      <p style="font-size: 0.9em; color: gray; margin-top: 10px;">
-        * Form powered by Formspree – set up your free email endpoint to receive submissions.
-      </p>
-    </section>
+      <button type="submit">Request Appointment</button>
+    </form>
   </div>
 
   <footer>
