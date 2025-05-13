@@ -63,6 +63,13 @@
     button:hover {
       background-color: #e6c200;
     }
+    .quote-box {
+      margin-top: 15px;
+      font-weight: bold;
+      background-color: #f0e6c0;
+      padding: 10px;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
@@ -81,13 +88,15 @@
       <label for="service">Select a Service:</label>
       <select id="service" name="service" required>
         <option value="">-- Choose a service --</option>
-        <option value="house">House Washing</option>
-        <option value="deck">Deck or Patio Cleaning</option>
-        <option value="driveway">Driveway Cleaning</option>
+        <option value="house">House Washing - $0.25/sq ft</option>
+        <option value="deck">Deck/Patio Cleaning - $0.35/sq ft</option>
+        <option value="driveway">Driveway Cleaning - $0.50/sq ft</option>
       </select>
 
       <label for="size">Approximate Square Footage:</label>
       <input type="number" id="size" name="size" placeholder="e.g., 1500" required />
+
+      <div class="quote-box" id="quoteBox">Estimated Quote: $0.00</div>
 
       <label for="date">Preferred Date:</label>
       <input type="date" id="date" name="date" required />
@@ -105,5 +114,36 @@
   <footer>
     <p>&copy; 2025 Odin's Elite Exterior Services. All rights reserved.</p>
   </footer>
+
+  <script>
+    const service = document.getElementById("service");
+    const size = document.getElementById("size");
+    const quoteBox = document.getElementById("quoteBox");
+
+    function calculateQuote() {
+      const sqft = parseFloat(size.value) || 0;
+      let rate = 0;
+
+      switch (service.value) {
+        case "house":
+          rate = 0.25;
+          break;
+        case "deck":
+          rate = 0.35;
+          break;
+        case "driveway":
+          rate = 0.50;
+          break;
+        default:
+          rate = 0;
+      }
+
+      const quote = (sqft * rate).toFixed(2);
+      quoteBox.textContent = `Estimated Quote: $${quote}`;
+    }
+
+    service.addEventListener("change", calculateQuote);
+    size.addEventListener("input", calculateQuote);
+  </script>
 </body>
 </html>
