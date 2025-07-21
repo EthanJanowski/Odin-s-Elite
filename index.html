@@ -70,6 +70,16 @@
       padding: 10px;
       border-radius: 6px;
     }
+    .thank-you {
+      font-size: 1.2em;
+      font-weight: bold;
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-top: 30px;
+    }
   </style>
 </head>
 <body>
@@ -84,17 +94,33 @@
 
   <div class="content">
     <h2>Request an Appointment</h2>
-    <form action="https://formspree.io/f/mzzrjkgp" method="POST">
+    <form id="serviceForm" action="https://formspree.io/f/mzzrjkgp" method="POST">
       <label for="service">Select a Service:</label>
       <select id="service" name="service" required>
         <option value="">-- Choose a service --</option>
+        <!-- Original Services -->
         <option value="house">House Washing - $0.25/sq ft</option>
         <option value="deck">Deck/Patio Cleaning - $0.35/sq ft</option>
         <option value="driveway">Driveway Cleaning - $0.50/sq ft</option>
+
+        <!-- New Handyman Services -->
+        <option value="interiorExteriorRepairs">Interior & Exterior Repairs</option>
+        <option value="carpentryWoodworking">Carpentry & Woodworking</option>
+        <option value="tileFlooring">Tile & Flooring Installation</option>
+        <option value="lightElectrical">Light Electrical (outlets, switches, fixtures)</option>
+        <option value="doorWindowInstall">Door & Window Installations</option>
+        <option value="fenceDeckRepair">Fence & Deck Repair</option>
+        <option value="tvMountingShelving">TV Mounting & Shelving</option>
+        <option value="hourly">General Handyman – Hourly ($65/hr, 1-hr min)</option>
+        <option value="halfDay">General Handyman – Half-Day ($240 flat)</option>
+        <option value="fullDay">General Handyman – Full-Day ($460 flat)</option>
+        <option value="customBid">Custom Project – Request a Bid</option>
       </select>
 
-      <label for="size">Approximate Square Footage:</label>
-      <input type="number" id="size" name="size" placeholder="e.g., 1500" required />
+      <div id="sizeGroup">
+        <label for="size">Approximate Square Footage:</label>
+        <input type="number" id="size" name="size" placeholder="e.g., 1500" />
+      </div>
 
       <div class="quote-box" id="quoteBox">Estimated Quote: $0.00</div>
 
@@ -109,6 +135,10 @@
 
       <button type="submit">Request Appointment</button>
     </form>
+
+    <div class="thank-you" id="thankYouMessage" style="display: none;">
+      Thank you! Your request has been received. We'll contact you shortly to confirm.
+    </div>
   </div>
 
   <footer>
@@ -118,32 +148,79 @@
   <script>
     const service = document.getElementById("service");
     const size = document.getElementById("size");
+    const sizeGroup = document.getElementById("sizeGroup");
     const quoteBox = document.getElementById("quoteBox");
+    const form = document.getElementById("serviceForm");
+    const thankYou = document.getElementById("thankYouMessage");
 
     function calculateQuote() {
       const sqft = parseFloat(size.value) || 0;
-      let rate = 0;
+      let quoteText = "Estimated Quote: $0.00";
+
+      const sqftServices = ["house", "deck", "driveway"];
+
+      // Show/hide square footage input
+      if (sqftServices.includes(service.value)) {
+        sizeGroup.style.display = "block";
+      } else {
+        sizeGroup.style.display = "none";
+        size.value = ""; // Clear size field
+      }
 
       switch (service.value) {
         case "house":
-          rate = 0.25;
+          quoteText = `Estimated Quote: $${(sqft * 0.25).toFixed(2)}`;
           break;
         case "deck":
-          rate = 0.35;
+          quoteText = `Estimated Quote: $${(sqft * 0.35).toFixed(2)}`;
           break;
         case "driveway":
-          rate = 0.50;
+          quoteText = `Estimated Quote: $${(sqft * 0.50).toFixed(2)}`;
+          break;
+        case "hourly":
+          quoteText = "Flat Rate: $65/hr (1-hour minimum)";
+          break;
+        case "halfDay":
+          quoteText = "Flat Rate: $240 (Half-Day, up to 4 hrs)";
+          break;
+        case "fullDay":
+          quoteText = "Flat Rate: $460 (Full-Day, up to 8 hrs)";
+          break;
+        case "customBid":
+          quoteText = "Custom quote will be provided after consultation.";
           break;
         default:
-          rate = 0;
+          quoteText = "Flat rate or custom pricing – discussed upon booking.";
       }
 
-      const quote = (sqft * rate).toFixed(2);
-      quoteBox.textContent = `Estimated Quote: $${quote}`;
+      quoteBox.textContent = quoteText;
     }
 
     service.addEventListener("change", calculateQuote);
     size.addEventListener("input", calculateQuote);
+
+    // Confirmation message handler
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (response.ok) {
+        form.style.display = "none";
+        thankYou.style.display = "block";
+      } else {
+        alert("There was a problem submitting the form. Please try again.");
+      }
+    });
+
+    // Initial call to setup size field visibility
+    calculateQuote();
   </script>
 </body>
 </html>
