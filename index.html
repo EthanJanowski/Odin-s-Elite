@@ -45,11 +45,14 @@
       margin-top: 10px;
       font-weight: bold;
     }
-    select, input[type="number"], input[type="text"], input[type="date"] {
+    select, input[type="number"], input[type="text"], input[type="date"], input[type="file"], textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
       box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
     }
     button {
       background-color: #ffd700;
@@ -94,16 +97,13 @@
 
   <div class="content">
     <h2>Request an Appointment</h2>
-    <form id="serviceForm" action="https://formspree.io/f/mzzrjkgp" method="POST">
+    <form id="serviceForm" action="https://formspree.io/f/mzzrjkgp" method="POST" enctype="multipart/form-data">
       <label for="service">Select a Service:</label>
       <select id="service" name="service" required>
         <option value="">-- Choose a service --</option>
-        <!-- Original Services -->
         <option value="house">House Washing - $0.25/sq ft</option>
         <option value="deck">Deck/Patio Cleaning - $0.35/sq ft</option>
         <option value="driveway">Driveway Cleaning - $0.50/sq ft</option>
-
-        <!-- New Handyman Services -->
         <option value="interiorExteriorRepairs">Interior & Exterior Repairs</option>
         <option value="carpentryWoodworking">Carpentry & Woodworking</option>
         <option value="tileFlooring">Tile & Flooring Installation</option>
@@ -133,6 +133,13 @@
       <label for="contact">Contact Info (Phone or Email):</label>
       <input type="text" id="contact" name="contact" required />
 
+      <label for="description">Project Information (optional):</label>
+      <textarea id="description" name="description" rows="4" placeholder="Briefly describe the work you'd like done..."></textarea>
+
+      <!-- File Upload Field -->
+      <label for="attachment">Attach a Photo or File (optional):</label>
+      <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf" />
+
       <button type="submit">Request Appointment</button>
     </form>
 
@@ -159,12 +166,11 @@
 
       const sqftServices = ["house", "deck", "driveway"];
 
-      // Show/hide square footage input
       if (sqftServices.includes(service.value)) {
         sizeGroup.style.display = "block";
       } else {
         sizeGroup.style.display = "none";
-        size.value = ""; // Clear size field
+        size.value = "";
       }
 
       switch (service.value) {
@@ -199,7 +205,6 @@
     service.addEventListener("change", calculateQuote);
     size.addEventListener("input", calculateQuote);
 
-    // Confirmation message handler
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
@@ -219,7 +224,6 @@
       }
     });
 
-    // Initial call to setup size field visibility
     calculateQuote();
   </script>
 </body>
